@@ -43,7 +43,7 @@ impl Vector3 {
     }
 
     pub fn dot(&self, other: Vector3) -> f64 {
-       self.data[0]  * other.data[0] + self.data[1] * other.data[1] + self.data[2] * other.data[2]
+        self.data[0] * other.data[0] + self.data[1] * other.data[1] + self.data[2] * other.data[2]
     }
 }
 
@@ -83,6 +83,20 @@ impl ops::Mul<f64> for Vector3 {
     }
 }
 
+impl ops::Mul<Vector3> for f64 {
+    type Output = Vector3;
+
+    fn mul(self, rhs: Vector3) -> Self::Output {
+        Vector3 {
+            data: [
+                rhs.data[0] * self,
+                rhs.data[1] * self,
+                rhs.data[2] * self
+            ]
+        }
+    }
+}
+
 impl ops::Div<f64> for Vector3 {
     type Output = Vector3;
 
@@ -98,5 +112,16 @@ impl Vector3 {
 
     pub fn to_color_str_with_newline(&self) -> String {
         self.to_color_str() + "\n"
+    }
+
+    pub fn to_color_sampled(&self, samples_per_pixel: i32) -> String {
+        let scale = 1.0 / (samples_per_pixel as f64);
+        let new_color = *self * scale;
+
+        new_color.to_color_str()
+    }
+
+    pub fn to_color_sampled_with_newline(&self, samples_per_pixel: i32) -> String {
+        self.to_color_sampled(samples_per_pixel) + "\n"
     }
 }
