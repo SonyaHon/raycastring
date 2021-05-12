@@ -1,0 +1,102 @@
+use std::ops;
+
+#[derive(Debug, PartialEq, Copy, Clone)]
+pub struct Vector3 {
+    data: [f64; 3]
+}
+
+impl Vector3 {
+    pub fn zero() -> Self {
+        Vector3 {
+            data: [0.0, 0.0, 0.0]
+        }
+    }
+
+    pub fn new(x: f64, y: f64, z: f64) -> Self {
+        Vector3 {
+            data: [x, y, z]
+        }
+    }
+
+    pub fn unit_vector(value: Vector3) -> Vector3 {
+        value / value.length()
+    }
+
+    pub fn x(&self) -> f64 {
+        self.data[0]
+    }
+
+    pub fn y(&self) -> f64 {
+        self.data[1]
+    }
+
+    pub fn z(&self) -> f64 {
+        self.data[2]
+    }
+
+    pub fn length(&self) -> f64 {
+        self.length_squared().sqrt()
+    }
+
+    pub fn length_squared(&self) -> f64 {
+        self.data[0] * self.data[0] + self.data[1] * self.data[1] + self.data[2] * self.data[2]
+    }
+
+    pub fn dot(&self, other: Vector3) -> f64 {
+       self.data[0]  * other.data[0] + self.data[1] * other.data[1] + self.data[2] * other.data[2]
+    }
+}
+
+impl ops::Add<Vector3> for Vector3 {
+    type Output = Vector3;
+
+    fn add(self, rhs: Vector3) -> Self::Output {
+        Vector3 {
+            data: [
+                self.data[0] + rhs.data[0],
+                self.data[1] + rhs.data[1],
+                self.data[2] + rhs.data[2]
+            ]
+        }
+    }
+}
+
+impl ops::Sub<Vector3> for Vector3 {
+    type Output = Vector3;
+
+    fn sub(self, rhs: Vector3) -> Self::Output {
+        self + (rhs * -1.0)
+    }
+}
+
+impl ops::Mul<f64> for Vector3 {
+    type Output = Vector3;
+
+    fn mul(self, rhs: f64) -> Self::Output {
+        Vector3 {
+            data: [
+                self.data[0] * rhs,
+                self.data[1] * rhs,
+                self.data[2] * rhs
+            ]
+        }
+    }
+}
+
+impl ops::Div<f64> for Vector3 {
+    type Output = Vector3;
+
+    fn div(self, rhs: f64) -> Self::Output {
+        self * (1.0 / rhs)
+    }
+}
+
+impl Vector3 {
+    pub fn to_color_str(&self) -> String {
+        format!("{} {} {}", (255.999 * self.data[0]) as i32, (255.999 * self.data[1]) as i32, (255.999 * self.data[2]) as i32)
+    }
+
+    pub fn to_color_str_with_newline(&self) -> String {
+        self.to_color_str() + "\n"
+    }
+}
