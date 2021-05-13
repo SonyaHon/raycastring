@@ -12,9 +12,10 @@ pub fn gen_image<T: GenImageCallback>(width: i32, height: i32, filename: &str, e
     println!("Rendering image {}x{} to {}", width, height, filename);
 
     let mut file = File::create(filename).expect(format!("Could not create file {}", filename).as_str());
-    file.write_all(format!("P3\n{} {}\n255\n", width, height).as_bytes()).expect("Error writing to file");
+   let mut final_string = format!("P3\n{} {}\n255\n", width, height);
 
     let mut rng = rand::thread_rng();
+
 
     for j in (0..height).rev() {
         for i in 0..width {
@@ -29,10 +30,12 @@ pub fn gen_image<T: GenImageCallback>(width: i32, height: i32, filename: &str, e
                 color = color + parsed_color;
             }
 
-            file.write_all(color.to_color_sampled_with_newline(samples_per_pixel).as_bytes()).expect("Error writing to file");
+            final_string += color.to_color_sampled_with_newline(samples_per_pixel).as_str();
         }
 
         let percents = (((height - j) as f64 / height as f64) * 100.0).floor();
         println!("Progress: {}%", percents);
     }
+
+    file.write_all(final_string.as_bytes()).expect("Error while writing to the file");
 }

@@ -4,6 +4,7 @@ pub mod image_utils;
 mod shapes;
 mod world;
 mod camera;
+mod widget_test;
 
 use crate::image_utils::{gen_image, GenImageCallback};
 use crate::vector_3::Vector3;
@@ -46,7 +47,6 @@ impl GenImageCallback for RayCast {
         let hit_record = self.world.hit_anything(&ray, 0.0, std::f64::INFINITY);
         if hit_record.is_some() {
             let hit_record = hit_record.unwrap();
-
             return (hit_record.normal + Vector3::new(1.0, 1.0, 1.0)) * 0.5;
         }
 

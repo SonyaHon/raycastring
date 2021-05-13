@@ -1,8 +1,11 @@
 use std::ops;
+use rand::Rng;
+use std::ops::RangeTo;
+use rand::distributions::uniform::SampleRange;
 
 #[derive(Debug, PartialEq, Copy, Clone)]
 pub struct Vector3 {
-    data: [f64; 3]
+    data: [f64; 3],
 }
 
 impl Vector3 {
@@ -20,6 +23,37 @@ impl Vector3 {
 
     pub fn unit_vector(value: Vector3) -> Vector3 {
         value / value.length()
+    }
+
+    pub fn gen_random() -> Self {
+        let mut rng = rand::thread_rng();
+        Vector3 {
+            data: [
+                rng.gen(),
+                rng.gen(),
+                rng.gen(),
+            ]
+        }
+    }
+
+    pub fn get_random_in_range(min: f64, max: f64) -> Self {
+        let mut rng = rand::thread_rng();
+        Vector3 {
+            data: [
+                rng.gen_range(min..max),
+                rng.gen_range(min..max),
+                rng.gen_range(min..max),
+            ]
+        }
+    }
+
+    pub fn gen_random_point_in_unit_sphere() -> Self {
+        loop {
+            let point = Self::get_random_in_range(-1.0, 1.0);
+            if point.length_squared() < 1.0 {
+                return point;
+            }
+        }
     }
 
     pub fn x(&self) -> f64 {
